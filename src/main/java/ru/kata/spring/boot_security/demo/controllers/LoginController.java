@@ -8,6 +8,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        return "login"; // Имя вашего шаблона для страницы входа
+        return "login";
     }
 }
