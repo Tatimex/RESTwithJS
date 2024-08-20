@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User info</title>
+</head>
+<body>
+
+<div>
+  <h2>User Info</h2>
+  <br>
+
+  <form th:action="@{/admin/saveUser}" th:object="${user}">
+
+
+    <input type="hidden" th:field="*{id}"/>
+    Name <input type="text" th:field="*{name}"/>
+    <br><br>
+    Age <input type="text" th:field="*{age}"/>
+    <br><br>
+    Email <input type="text" th:field="*{email}"/>
+    <br><br>
+    Password <input type="text" name="password"/>
+    <br><br>
+
+    <select multiple size="4" name="rolesNames" th:required="true">
+      <option value=""> - Select role -</option>
+      <option
+              th:each="role : ${rolesNames}"
+              th:value="${role.role}"
+              th:text="${role.role}"
+              th:selected="${#lists.contains(user.roles, role)}">
+      </option>
+    </select>
+
+    <button type="submit" class="btn btn-success">Ok</button>
+
+  </form>
+  </form>
+</div>
+</body>
+</html>

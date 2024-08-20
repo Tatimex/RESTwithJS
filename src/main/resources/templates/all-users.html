@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+</head>
+<body>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+
+<br/>
+
+<h1>Admin</h1>
+
+<div>
+    <table border="1" style="width:500px">
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Roles</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+
+        <tr th:each="user : ${allUsers}">
+            <td th:utext="${user.name}">name</td>
+            <td th:utext="${user.age}">age</td>
+            <td th:utext="${user.email}">email</td>
+            <td th:utext="${user.password}">password</td>
+            <td>
+                <th:block th:each="role : ${user.getRoles()}">
+                    <span th:attr="data-role=${role.getRole()}" th:text="${role.getRole()}"></span>
+                </th:block>
+            </td>
+            <td>
+                <input type="button" value="Update"
+                       th:onclick="'window.location.href = \'' + @{/admin/updateInfo/{id} (id =${user.id})} + '\''"/>
+            </td>
+            <td>
+                <input type="button" value="Delete"
+                       th:onclick="'window.location.href = \'' + @{/admin/deleteUser/{id} (id =${user.id})} + '\''"/>
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+<br>
+
+<input type="button" value="AddUser" onclick="window.location.href = 'addNewUser'"/>
+
+</body>
+</html>
