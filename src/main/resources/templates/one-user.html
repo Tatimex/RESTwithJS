@@ -1,31 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>User ordinary</title>
+  <title>User</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css"
+        integrity="sha512-T584yQ/tdRR5QwOpfvDfVQUidzfgc2339Lc8uBDtcp/wYu80d7jwBgAxbyMh0a9YM9F8N3tdErpFI8iaGx6x5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+          integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.min.js"
+          integrity="sha512-UR25UO94eTnCVwjbXozyeVd6ZqpaAE9naiEUBK/A+QDbfSTQFhPGj5lOR6d8tsgbBk84Ggb5A3EkjsOgPRPcKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <title>Users</title>
 </head>
 
 <body>
-<form th:action="@{/logout}" method="post">
-  <button type="submit">Logout</button>
-</form>
-<br/>
-<h1>User ordinary</h1>
+<div class="container-fluid">
 
+  <div class="p-3 mb-2 bg-dark text-white">
+    <div class="row">
+      <div class="col-sm-8">
+        <a th:text="${user.getEmail()}" class="fw-bolder text-white bg-dark font-weight-bold"></a>
+        <span class="text-start">with roles:
+                    <a th:each="role : ${user.getRoles()}"><span th:attr="data-role=${role.getRole()}"
+                                                                 th:text="${role.getRole()}"></span></a>
+                </span>
+      </div>
+      <div class="col-sm-4">
+        <form th:action="@{/logout}" method="post">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="text-muted btn btn-dark" type="submit">Logout</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
-<table border="1" style="width:500px">
-  <tr>
-    <th>Name</th>
-    <th>Age</th>
-    <th>Email</th>
-  </tr>
-  <tr>
-    <td th:text="${user.name}">name</td>
-    <td th:text="${user.age}">age</td>
-    <td th:text="${user.email}">email</td>
-  </tr>
 
-</table>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-2">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+        <a class="nav-link active" id="v-pills-tab1-tab" data-toggle="pill" role="tab"
+           aria-controls="v-pills-tab1" aria-expanded="true">USER</a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-tab1" role="tabpanel"
+             aria-labelledby="v-pills-home-tab">
+          <h2>User information-page</h2>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                 aria-labelledby="nav-home-tab">
+              <div class="card">
+                <h5 class="card-header">About user</h5>
+                <div class="card-body">
+                  <table class="table table-striped">
+                    <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Age</th>
+                      <th>E-mail</th>
+                      <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <th th:text="${user.id}" scope="row"></th>
+                      <td th:text="${user.name}"></td>
+                      <td th:text="${user.age}"></td>
+                      <td th:text="${user.email}"></td>
+                      <td>
+                        <th:block th:each="role : ${user.getRoles()}">
+                                                    <span th:attr="data-role=${role.getRole()}"
+                                                          th:text="${role.getRole()}"></span>
+                        </th:block>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>

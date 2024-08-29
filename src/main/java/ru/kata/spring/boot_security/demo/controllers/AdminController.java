@@ -44,7 +44,7 @@ public class AdminController {
     public String addNewUser(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("rolesNames", roleService.getAllRoles());
-        return "user-info";
+        return "redirect:/admin/all-users";
     }
 
     @PostMapping("/saveUser")
@@ -56,7 +56,7 @@ public class AdminController {
     public String updateUser(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         model.addAttribute("rolesNames", roleService.getAllRoles());
-        return "user-info";
+        return "redirect:/admin/all-users";
     }
 
     @GetMapping("/deleteUser/{id}")
