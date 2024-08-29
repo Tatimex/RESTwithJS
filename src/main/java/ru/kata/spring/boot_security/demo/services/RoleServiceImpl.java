@@ -4,73 +4,85 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.DAO.RoleDAO;
+import ru.kata.spring.boot_security.demo.DAO.RoleDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
     private static final Logger logger = LogManager.getLogger(RoleServiceImpl.class);
 
-    private final RoleDAO roleDAO;
+    private final RoleDao roleDao;
 
-    public RoleServiceImpl(RoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
+    public RoleServiceImpl(RoleDao roleDao) {
+        this.roleDao = roleDao;
     }
 
     @Override
-    @Transactional
     public List<Role> getAllRoles() {
-        logger.debug("Request to get all roles");
-        List<Role> roles = roleDAO.getAllRoles();
-        logger.debug("Number of roles retrieved: {}", roles.size());
+        logger.info("Fetching all roles");
+        List<Role> roles = roleDao.findAll();
+        if (roles != null && !roles.isEmpty()) {
+            logger.info("Found {} roles", roles.size());
+        } else {
+            logger.warn("No roles found");
+        }
         return roles;
     }
 
     @Override
     @Transactional
     public void saveRole(Role role) {
-        logger.debug("Request to save role: {}", role);
+        logger.info("Saving role: {}", role);
         try {
-            roleDAO.saveRole(role);
-            logger.info("Role saved successfully: {}", role);
+            roleDao.save(role);
+            logger.info("Role saved successfully");
         } catch (Exception e) {
-            logger.error("Error occurred while saving role: {}", role, e);
+            logger.error("Error saving role: {}", role, e);
+            throw e;
         }
     }
 
     @Override
     @Transactional
     public void deleteRoleById(Long id) {
-        logger.debug("Request to delete role with id: {}", id);
+        logger.info("Deleting role with id: {}", id);
         try {
-            roleDAO.deleteRoleById(id);
+            roleDao.deleteById(id);
             logger.info("Role with id {} deleted successfully", id);
         } catch (Exception e) {
-            logger.error("Error occurred while deleting role with id: {}", id, e);
+            logger.error("Error deleting role with id: {}", id, e);
+            throw e;
         }
     }
 
     @Override
-    @Transactional
     public Role getRoleById(Long id) {
-        logger.debug("Request to get role with id: {}", id);
-        Role role = roleDAO.getRoleById(id);
-        if (role == null) {
-            logger.warn("Role with id {} not found", id);
+        logger.info("Fetching role with id: {}", id);
+        Optional<Role> optional = roleDao.findById(id);
+        if (optional.isPresent()) {
+            Role role = optional.get();
+            logger.info("Role found: {}", role);
+            return role;
         } else {
-            logger.debug("Retrieved role: {}", role);
+            logger.warn("Role with id {} not found", id);
+            return null;
+        }
+    }
+
+    @Override
+    public Role getByRoleName(String roleName) {
+        logger.info("Fetching role with name: {}", roleName);
+        Role role = roleDao.findByRole(roleName);
+        if (role != null) {
+            logger.info("Role found: {}", role);
+        } else {
+            logger.warn("Role with name {} not found", roleName);
         }
         return role;
     }
-
-    @Override
-    @Transactional
-    public Role getByRoleName(String roleName) {
-        logger.debug("Request to get role with name: {}", roleName);
-        return roleDAO.getByRoleName(roleName)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName));
-    }
 }
+

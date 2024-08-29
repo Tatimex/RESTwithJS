@@ -12,7 +12,7 @@ import javax.persistence.UniqueConstraint;
 import java.util.Objects;
 
 @Entity
-@Table(name = "roles", uniqueConstraints = @UniqueConstraint(columnNames = "role"))
+@Table(name = "roles")
 public class Role implements GrantedAuthority {
 
     @Id
@@ -53,10 +53,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return "Role{" +
-               "id=" + id +
-               ", role='" + role + '\'' +
-               '}';
+        return role;
     }
 
     @Override

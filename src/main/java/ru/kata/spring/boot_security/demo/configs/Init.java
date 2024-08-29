@@ -15,6 +15,7 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 import javax.annotation.PostConstruct;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 
@@ -23,36 +24,41 @@ public class Init {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
-    private final DatabaseCleanupService databaseCleanupService;
 
-    public Init(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder, DatabaseCleanupService databaseCleanupService) {
+    public Init(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-        this.databaseCleanupService = databaseCleanupService;
     }
-
-    private static final Logger logger = LogManager.getLogger(RoleServiceImpl.class);
 
     @PostConstruct
-    public void init() {
-
-        databaseCleanupService.truncateTables();
-
-
-        Role adminRole = new Role(null, "ROLE_ADMIN");
-        Role userRole = new Role(null, "ROLE_USER");
-        roleService.saveRole(adminRole);
-        roleService.saveRole(userRole);
+    public void postConstruct() {
+        User admin = new User();
+        admin.setEmail("admin@admin.com");
+        admin.setName("Pupa");
+        admin.setSurname("Pupuna");
+        admin.setAge("34");
+        admin.setPassword("user");
 
 
-        User admin = new User("Admin", 30, "admin@example.com","adminpass", new HashSet<>(Arrays.asList(adminRole)));
-        User user = new User("User", 25, "user@example.com", "userpass", new HashSet<>(Arrays.asList(userRole)));
+        User user = new User();
+        user.setEmail("user@user.com");
+        user.setName("Fufu");
+        user.setSurname("Fufin");
+        user.setAge("18");
+        user.setPassword("user");
 
-        userService.saveUser(admin, new String[]{"ROLE_ADMIN"});
-        userService.saveUser(user, new String[]{"ROLE_USER"});
 
-        logger.info("Initial roles and users have been created");
+        Role role = new Role(1L, "ROLE_ADMIN");
+        Role role2 = new Role(2L, "ROLE_USER");
+
+        roleService.saveRole(role);
+        roleService.saveRole(role2);
+
+        admin.setRoles(Collections.singleton(role));
+        user.setRoles(Collections.singleton(role2));
+
+        userService.saveUser(admin);
+        userService.saveUser(user);
     }
+
 }
